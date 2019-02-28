@@ -47,10 +47,9 @@ CFLAGS =
 CFLAGS_AUTO = -Os -pipe
 CFLAGS_C99FSE = -std=c99 -ffreestanding -nostdinc
 
-
 CFLAGS_ALL = $(CFLAGS_C99FSE)
 CFLAGS_ALL += -D_XOPEN_SOURCE=700 -I$(srcdir)/arch/$(ARCH) -I$(srcdir)/arch/generic -Iobj/src/internal -I$(srcdir)/src/include -I$(srcdir)/src/internal -Iobj/include -I$(srcdir)/include -isystem $(lklheaderdir)/ -isystem $(sgxlklheaderdir)/ -isystem $(cryptsetupheaderdir)/
-CFLAGS_ALL += $(CPPFLAGS) $(CFLAGS_AUTO) $(CFLAGS) $(CFLAGS_SGX)
+CFLAGS_ALL += $(CPPFLAGS) $(CFLAGS_AUTO) $(CFLAGS) $(CFLAGS_SGX) $(SPDK_SGX_CFLAGS)
 
 # don't allow dynamic linker to use mmap
 CFLAGS_ALL += -DDL_NOMMU_SUPPORT=1
@@ -65,13 +64,13 @@ ARCH_INCLUDES = $(wildcard $(srcdir)/arch/$(ARCH)/bits/*.h)
 GENERIC_INCLUDES = $(wildcard $(srcdir)/arch/generic/bits/*.h)
 LKL_INCLUDES = $(shell find $(lklheaderdir)/ -name "*.h" -type f)
 INCLUDES = $(wildcard $(srcdir)/include/*.h $(srcdir)/include/*/*.h)
-ALL_INCLUDES = $(sort $(INCLUDES:$(srcdir)/%=%) $(GENH:obj/%=%) $(ARCH_INCLUDES:$(srcdir)/arch/$(ARCH)/%=include/%) $(GENERIC_INCLUDES:$(srcdir)/arch/generic/%=include/%)) $(LKL_INCLUDES:$(lklheaderdir)/%=include/%) 
+ALL_INCLUDES = $(sort $(INCLUDES:$(srcdir)/%=%) $(GENH:obj/%=%) $(ARCH_INCLUDES:$(srcdir)/arch/$(ARCH)/%=include/%) $(GENERIC_INCLUDES:$(srcdir)/arch/generic/%=include/%)) $(LKL_INCLUDES:$(lklheaderdir)/%=include/%)
 
 EMPTY_LIB_NAMES = m rt pthread crypt util xnet resolv dl
 EMPTY_LIBS = $(EMPTY_LIB_NAMES:%=lib/lib%.a)
 CRT_LIBS = $(addprefix lib/,$(notdir $(CRT_OBJS)))
 SHARED_LIBS = lib/libsgxlkl.so
-ALL_LIBS = $(CRT_LIBS) $(SHARED_LIBS) $(EMPTY_LIBS) 
+ALL_LIBS = $(CRT_LIBS) $(SHARED_LIBS) $(EMPTY_LIBS)
 ALL_TOOLS = obj/musl-gcc
 
 WRAPCC_GCC = gcc
@@ -165,7 +164,7 @@ lib/libsgxlkl.so: $(LOBJS) $(LDSO_OBJS) $(cryptsetuplib) $(lkllib) $(sgxlkllib)
 	@mkdir -p obj/sgxlkl
 	cd obj/sgxlkl/; ar -x $(sgxlkllib)
 	$(CC) $(CFLAGS_ALL) $(LDFLAGS_ALL) -nostdlib -shared -Wl,-z,defs \
-	-Wl,-e,_dlstart_c -o $@ lib/sgxcrt.o $(LOBJS) obj/sgxlkl/*.o $(LDSO_OBJS) $(LIBCC) $(cryptsetuplib) $(lkllib)
+	-Wl,-e,_dlstart_c -o $@ lib/sgxcrt.o $(LOBJS) obj/sgxlkl/*.o  $(LDSO_OBJS) $(LIBCC) $(cryptsetuplib) $(lkllib) $(SPDK_SGX_LDFLAGS)
 
 $(EMPTY_LIBS):
 	rm -f $@
