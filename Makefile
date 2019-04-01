@@ -164,7 +164,7 @@ lib/libsgxlkl.so: $(LOBJS) $(LDSO_OBJS) $(cryptsetuplib) $(lkllib) $(sgxlkllib)
 	@mkdir -p obj/sgxlkl
 	cd obj/sgxlkl/; ar -x $(sgxlkllib)
 	$(CC) $(CFLAGS_ALL) $(LDFLAGS_ALL) -nostdlib -shared -Wl,-z,defs \
-	-Wl,-e,_dlstart_c -o $@ lib/sgxcrt.o $(LOBJS) obj/sgxlkl/*.o  $(LDSO_OBJS) $(LIBCC) $(cryptsetuplib) $(lkllib) $(SPDK_SGX_LDFLAGS)
+	-Wl,-e,_dlstart_c -o $@ lib/sgxcrt.o $(LOBJS) obj/sgxlkl/*.o  $(LDSO_OBJS) $(LIBCC) $(SPDK_SGX_LDFLAGS) $(cryptsetuplib) $(lkllib)
 
 $(EMPTY_LIBS):
 	rm -f $@
