@@ -1534,6 +1534,9 @@ static void do_init_fini(struct dso *p)
 	 * other threads until all ctors have finished. */
 	if (need_locking) pthread_mutex_lock(&init_fini_lock);
 	for (; p; p=p->prev) {
+		// WORKAROUND: We manually call SPDK/DPDK initializers in early boot.
+		// Therefore we skip the execution of initializers here.
+		if (strcmp(p->name, "libc.so") == 0) continue;
 		if (p->constructed) continue;
 		p->constructed = 1;
 		decode_vec(p->dynv, dyn, DYN_CNT);
