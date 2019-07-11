@@ -16,6 +16,7 @@
 #include "enclave_mem.h"
 #include "lkl/asm/host_ops.h"
 #include "lkl/setup.h"
+#include "lkl/dpdk.h"
 #include "lthread.h"
 #include "pthread.h"
 #include "pthread_impl.h"
@@ -284,6 +285,8 @@ static int startmain(enclave_config_t *encl) {
 #ifndef SGXLKL_HW
     sim_exit_handler = encl->sim_exit_handler;
 #endif
+
+    sgxlkl_register_dpdk_context(encl->dpdk_context);
 
     int res = atexit(exitmain);
     if (res != 0)
