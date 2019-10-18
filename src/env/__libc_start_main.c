@@ -17,6 +17,7 @@
 #include "lkl/asm/host_ops.h"
 #include "lkl/setup.h"
 #include "lkl/dpdk.h"
+#include "lkl/spdk.h"
 #include "lthread.h"
 #include "pthread.h"
 #include "pthread_impl.h"
@@ -286,7 +287,10 @@ static int startmain(enclave_config_t *encl) {
     sim_exit_handler = encl->sim_exit_handler;
 #endif
 
-    sgxlkl_register_dpdk_context(encl->dpdk_context);
+    if (encl->enable_sgxio) {
+      sgxlkl_register_dpdk_context(encl->dpdk_context);
+      sgxlkl_register_spdk_dma_memory(encl->spdk_dma_memory);
+    }
 
     int res = atexit(exitmain);
     if (res != 0)
