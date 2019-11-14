@@ -290,6 +290,7 @@ static int startmain(enclave_config_t *encl) {
     if (encl->enable_sgxio) {
       sgxlkl_register_dpdk_context(encl->dpdk_context);
       sgxlkl_register_spdk_dma_memory(encl->spdk_dma_memory);
+      sgxlkl_register_dpdk_dma_memory(&encl->dpdk_dma_memory);
     }
 
     int res = atexit(exitmain);
