@@ -338,6 +338,7 @@ int __pthread_create(pthread_t *restrict res, const pthread_attr_t *restrict att
     struct lthread_attr a = {0};
     if (attrp) {
             pthread_attr_getstack(attrp, &a.stack, &a.stack_size);
+            pthread_attr_getstacksize(attrp, &a.stack_size);
             pthread_attr_getdetachstate(attrp, &detach);
             if (detach == PTHREAD_CREATE_DETACHED) {
                 a.state = BIT(LT_ST_DETACH);
