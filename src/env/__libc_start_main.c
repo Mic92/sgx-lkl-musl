@@ -205,8 +205,9 @@ static void run_cmd_servers(sgxlkl_app_config_t *app_config, enclave_config_t *e
     SGXLKL_VERBOSE("Starting attestation server, listening on %s:%u...\n",
                    inet_ntoa(attest_srv_conf->addr.sin_addr),
                    encl->remote_attest_port);
-    if (lthread_create(&lt, NULL, enclave_cmd_server_run, attest_srv_conf) == -1)
-        sgxlkl_fail("Failed to created attestation server thread");
+    // FIXME: this blocks cpu 0 right now and therefor the boot.
+    //if (lthread_create(&lt, NULL, enclave_cmd_server_run, attest_srv_conf) == -1)
+    //    sgxlkl_fail("Failed to created attestation server thread");
 
     // Warn here and return in non-release mode if we can't provide remote
     // control interface.
