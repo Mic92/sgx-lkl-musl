@@ -307,14 +307,14 @@ static int startmain(enclave_config_t *encl) {
     lthread_set_funcname(lthread_self(), "sgx-lkl-init");
 
     // Get WG public key
-    wg_device *wg_dev;
-    if (wg_get_device(&wg_dev, "wg0"))
-        sgxlkl_fail("Failed to locate Wireguard interface 'wg0'.\n");
+    //wg_device *wg_dev;
+    //if (wg_get_device(&wg_dev, "wg0"))
+    //    sgxlkl_fail("Failed to locate Wireguard interface 'wg0'.\n");
 
     if (sgxlkl_verbose) {
-        wg_key_b64_string key;
-        wg_key_to_base64(key, wg_dev->public_key);
-        sgxlkl_info("wg0 has public key %s\n", key);
+        //wg_key_b64_string key;
+        //wg_key_to_base64(key, wg_dev->public_key);
+        //sgxlkl_info("wg0 has public key %s\n", key);
 #ifdef SGXLKL_HW
         sgxlkl_info("Enclave report nonce: %lu\n", encl->report_nonce);
 #endif
@@ -324,7 +324,7 @@ static int startmain(enclave_config_t *encl) {
 #ifdef SGXLKL_HW
     if (encl->report) {
         struct sgxlkl_report_data data = {0};
-        memcpy(&data.wg_public_key, wg_dev->public_key, sizeof(data.wg_public_key));
+        //memcpy(&data.wg_public_key, wg_dev->public_key, sizeof(data.wg_public_key));
         data.nonce = encl->report_nonce;
 
         enclave_report(encl->quote_target_info, (sgx_report_data_t*) &data, encl->report);
@@ -407,13 +407,13 @@ static int startmain(enclave_config_t *encl) {
     lkl_mount_disks(app_config.disks, app_config.num_disks, app_config.cwd);
 
     // Add Wireguard peers
-    if (wg_dev) {
-        wgu_add_peers(wg_dev, app_config.peers, app_config.num_peers, 1);
-    } else if (app_config.num_peers) {
-        sgxlkl_warn("Failed to add wireguard peers: No device 'wg0' found.\n");
-    }
-    if (app_config.num_peers && sgxlkl_verbose)
-        wgu_list_devices();
+    //if (wg_dev) {
+    //    wgu_add_peers(wg_dev, app_config.peers, app_config.num_peers, 1);
+    //} else if (app_config.num_peers) {
+    //    sgxlkl_warn("Failed to add wireguard peers: No device 'wg0' found.\n");
+    //}
+    //if (app_config.num_peers && sgxlkl_verbose)
+    //    wgu_list_devices();
 
     // Launch stage 3 dynamic linker, passing in top of stack to overwrite.
     // The dynamic linker will then load the application proper; here goes!
