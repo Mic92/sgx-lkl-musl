@@ -186,7 +186,7 @@ int __clock_gettime(clockid_t clk, struct timespec *ts)
 #ifndef SGXLKL_HW
 			// This requires (efficient) RDTSC support which we don't have
 			// in SGX v1 where RDTSC instructions are illegal.
-			ns += vgetsns(ptr, &ptr->vclock_mode);
+			ns += vgetsns(ptr, &ptr->clock_mode);
 #endif /* SGXLKL_HW */
 			ns >>= ptr->shift;
 		}
