@@ -123,9 +123,6 @@ $(OPTIMIZE_SRCS:$(srcdir)/%.c=obj/%.o) $(OPTIMIZE_SRCS:$(srcdir)/%.c=obj/%.lo): 
 MEMOPS_OBJS = $(filter %/memcpy.o %/memmove.o %/memcmp.o %/memset.o, $(LIBC_OBJS))
 $(MEMOPS_OBJS) $(MEMOPS_OBJS:%.o=%.lo): CFLAGS_ALL += $(CFLAGS_MEMOPS)
 
-MEMCPY_OBJS = $(filter %/memcpy.o, $(LIBC_OBJS))
-$(MEMCPY_OBJS) $(MEMCPY_OBJS:%.o=%.lo): CFLAGS_ALL := $(filter-out -nostdinc, $(CFLAGS_ALL))
-
 NOSSP_OBJS = $(CRT_OBJS) $(LDSO_OBJS) $(filter \
 	%/__libc_start_main.o %/__init_tls.o %/__stack_chk_fail.o \
 	%/__set_thread_area.o %/memset.o %/memcpy.o \
